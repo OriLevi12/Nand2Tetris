@@ -1,0 +1,78 @@
+/**
+ * ALU (Arithmetic Logic Unit):
+ * Computes out = one of the following functions:
+ *                0, 1, -1,
+ *                x, y, !x, !y, -x, -y,
+ *                x + 1, y + 1, x - 1, y - 1,
+ *                x + y, x - y, y - x,
+ *                x & y, x | y
+ * on the 16-bit inputs x, y,
+ * according to the input bits zx, nx, zy, ny, f, no.
+ * In addition, computes the two output bits:
+ * if (out == 0) zr = 1, else zr = 0
+ * if (out < 0)  ng = 1, else ng = 0
+ */
+// Implementation: Manipulates the x and y inputs
+// and operates on the resulting values, as follows:
+// if (zx == 1) sets x = 0        // 16-bit constant
+// if (nx == 1) sets x = !x       // bitwise not
+// if (zy == 1) sets y = 0        // 16-bit constant
+// if (ny == 1) sets y = !y       // bitwise not
+// if (f == 1)  sets out = x + y  // integer 2's complement addition
+// if (f == 0)  sets out = x & y  // bitwise and
+// if (no == 1) sets out = !out   // bitwise not
+
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute (out = x + y) or (out = x & y)?
+        no; // negate the out output?
+    OUT 
+        out[16], // 16-bit output
+        zr,      // if (out == 0) equals 1, else 0
+        ng;      // if (out < 0)  equals 1, else 0
+
+    PARTS:
+    // Step 1: Preprocessing input x
+    // If zx == 1, replace x with 0
+    Mux16(a=x, b=false, sel=zx, out=zeroX);
+    Not16(in=zeroX, out=notX);
+    Mux16(a=zeroX, b=notX, sel=nx, out=finishedX);
+    
+    // Step 2: Preprocessing input y
+    // If zy == 1, replace y with 0
+    Mux16(a=y, b=false, sel=zy, out=zeroY);
+    Not16(in=zeroY, out=notY);
+    Mux16(a=zeroY, b=notY, sel=ny, out=finishedY);
+
+    // Step 3: Compute either (x + y) or (x & y)
+    Add16(a=finishedX, b=finishedY, out=addResult);
+    And16(a=finishedX, b=finishedY, out=andResult);
+    Mux16(a=andResult, b=addResult, sel=f, out=Result);
+
+    // Step 4: Apply negation if no == 1
+    Not16(in=Result, out=negResult);
+    Mux16(a=Result, b=negResult, sel=no, out[0..7]=outFirstbits, out[8..14]=outLastbit, out[15]=outMSBbit);
+    
+    // Step 5: Final output handling (dummy MUX)
+    // This MUX does nothing as sel=false, effectively passing the output as is.
+    Mux16(a[0..7]=outFirstbits, a[8..14]=outLastbit, a[15]=outMSBbit, b=true, sel=false, out=out);
+
+    // Step 6: Compute zero flag (zr)
+    // zr is set to 1 if the output is 0, otherwise 0
+    // Aggregate OR operations to check if any bit in the output is 1
+    Or8Way(in=outFirstbits, out=zeroFirstbits);
+    Or8Way(in[0..6]=outLastbit, in[7]=outMSBbit, out=zeroLastbits);
+    Or(a=zeroFirstbits, b=zeroLastbits, out=zeroResult);
+    Not(in=zeroResult, out=zr);
+
+    // Step 7: Compute negative flag (ng)
+    // If the most significant bit (MSB) is 1, the output is negative
+    //if (out < 0)  ng = 1, else ng = 0
+    Or(a=outMSBbit, b=false, out=ng);
+
+}
