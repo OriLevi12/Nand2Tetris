@@ -1,0 +1,72 @@
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+   // ALU Operations
+    ALU(x=outD, y=outAM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], 
+        f=instruction[7], no=instruction[6], out=outM, out=outALU, zr=zr, ng=ng);
+
+    // Registers
+    ARegister(in=inA, load=loadA, out=outA, out[0..14]=addressM);  // A Register (stores data or addresses)
+    DRegister(in=outALU, load=loadD, out=outD);                    // D Register (stores computation results)
+    PC(in=outA, load=loadPC, inc=true, reset=reset, out[0..14]=pc); // Program Counter (stores the next instruction address)
+
+    // Multiplexers (Data Selection Logic)
+    Mux16(a=outALU, b=instruction, sel=instA, out=inA);  // Selects input for A Register
+    Mux16(a=outA, b=inM, sel=AMtoALU, out=outAM);        // Selects input for ALU
+
+    // Instruction Decoder
+        // Determine if the instruction is an A-instruction (instA) or C-instruction (instC)
+    Not(in=instruction[15], out=instA);  // If MSB is 0 → A-instruction
+    Not(in=instA, out=instC);            // If MSB is 1 → C-instruction
+
+    // Load Signals for Registers
+    And(a=instruction[15], b=instruction[4], out=loadD); // Load D register if it's a C-instruction with 'D' destination bit set
+    And(a=instC, b=instruction[5], out=destA);          // Check if 'A' destination bit is set in a C-instruction
+    Or(a=instA, b=destA, out=loadA);                    // Load A register if it's an A-instruction or A-destination in a C-instruction
+
+    // Jump Conditions
+        // JGT (Jump if Greater Than) - Executes when ALU output is positive (not zero and not negative)
+    Or(a=zr, b=ng, out=state1);  // state1 = ALU output is zero or negative
+    Not(in=state1, out=pos);     // pos = ALU output is positive
+    And(a=instruction[0], b=pos, out=JGT); // JGT is set if jump condition bit[0] is enabled and output is positive
+
+        // JEQ (Jump if Equal) - Executes when ALU output is zero
+    And(a=instruction[1], b=zr, out=JEQ);
+
+        // JLT (Jump if Less Than) - Executes when ALU output is negative
+    And(a=instruction[2], b=ng, out=JLT);
+
+        // Composite Jump Conditions
+    Or(a=JGT, b=JEQ, out=JGE); // JGE (Jump if Greater or Equal) = JGT OR JEQ
+    Or(a=JGT, b=JLT, out=JNE); // JNE (Jump if Not Equal) = JGT OR JLT
+    Or(a=JEQ, b=JLT, out=JLE); // JLE (Jump if Less or Equal) = JEQ OR JLT
+    Or(a=JGT, b=JLE, out=JMP); // JMP (Unconditional Jump) = JGT OR JLE
+
+        // Nested OR structure to combine all jump conditions
+    Or(a=JGT, b=JEQ, out=J1);
+    Or(a=JLT, b=J1, out=J2);
+    Or(a=JGE, b=J2, out=J3);
+    Or(a=JNE, b=J3, out=J4);
+    Or(a=JLE, b=J4, out=J5);
+    Or(a=JMP, b=J5, out=J6);
+
+    // Load Program Counter if jump condition is met in a C-instruction
+    And(a=instC, b=J6, out=loadPC);
+
+    // ALU Input Selection (Memory or Register)
+    And(a=instC, b=instruction[12], out=AMtoALU); // If instruction[12] is set in a C-instruction, select memory input for ALU
+
+    // Memory Write Signal
+    And(a=instC, b=instruction[3], out=loadM, out=writeM); // Enables memory write operation if 'M' destination bit is set in a C-instruction
+}
