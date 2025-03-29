@@ -3,11 +3,14 @@
 This repository contains my **Nand2Tetris** projects, where I learn how to build a computer from the ground up using the **Hack Assembly language** and digital logic.
 
 ## 📌 Current Progress
-I have completed the first **5 projects** of the course:
+I have completed the first **6 projects** of the course:
 
 - **Project 1-3:** Designing logic gates, building the ALU, and implementing RAM using HDL.
 - **Project 4:** Writing Hack Assembly programs (`Mult.asm`, `Fill.asm`).
-- **Project 5:** Building the complete Hack computer by implementing the `CPU`, `Memory`, and `Computer` chips in HDL.
+- **Project 5:** Building the complete Hack computer by implementing the `CPU`, `Memory`, and 
+`Computer` chips in HDL.
+- **Project 6:**  Developed a two-pass Hack assembler in Java that translates `.asm` files into `.hack` binary machine code. 
+
 
 I plan to continue working on the next projects, which include writing a Virtual Machine translator and eventually developing a simple operating system.
 
