@@ -1,18 +1,20 @@
 # Nand2Tetris Projects 🚀
 
-This repository contains my **Nand2Tetris** projects, where I learn how to build a computer from the ground up using the **Hack Assembly language** and digital logic.
+This repository contains my **Nand2Tetris** projects, where I learn how to build a computer from the ground up using the **Hack Assembly language**, **Virtual Machine translation**, and **digital logic**.
 
 ## 📌 Current Progress
-I have completed the first **6 projects** of the course:
+I have completed the first **7 projects** of the course:
 
-- **Project 1-3:** Designing logic gates, building the ALU, and implementing RAM using HDL.
-- **Project 4:** Writing Hack Assembly programs (`Mult.asm`, `Fill.asm`).
-- **Project 5:** Building the complete Hack computer by implementing the `CPU`, `Memory`, and 
-`Computer` chips in HDL.
-- **Project 6:**  Developed a two-pass Hack assembler in Java that translates `.asm` files into `.hack` binary machine code. 
+- **Project 1-3:** Designed basic logic gates, built the ALU, and implemented RAM using HDL.
+- **Project 4:** Wrote Hack Assembly programs (`Mult.asm`, `Fill.asm`).
+- **Project 5:** Built the complete Hack computer by implementing the `CPU`, `Memory`, and `Computer` chips in HDL.
+- **Project 6:** Developed a two-pass Hack assembler in Java that translates `.asm` files into `.hack` binary machine code.
+- **Project 7:** Implemented a **Virtual Machine (VM) Translator** in Java that converts high-level VM commands (e.g., `push`, `pop`, `add`, `eq`) into Hack assembly. This stage covers:
+  - Translating stack arithmetic operations (`add`, `sub`, `eq`, `gt`, `lt`, `neg`, `not`, `and`, `or`)
+  - Memory access commands: `push` and `pop` for segments like `constant`, `local`, `argument`, `this`, `that`, `temp`, `pointer`, and `static`
+  - Bootstrapping with initial `SP=256` and support for test scripts like `BasicTest`, `StackTest`, and more.
 
-
-I plan to continue working on the next projects, which include writing a Virtual Machine translator and eventually developing a simple operating system.
+I plan to continue with the next stages of the VM (Project 8 and onward), which include program control, function calls, and building a simple operating system.
 
 ## ⚡ Running the Projects
 To test the assembly programs (`.asm` files), you can use the **CPU Emulator** provided in the Nand2Tetris software suite:
@@ -28,10 +30,10 @@ To simulate the hardware components (`.hdl` files), use the **Hardware Simulator
 ## 🛠 Tools Used
 - **Hack Assembly Language** (Low-level programming)
 - **Nand2Tetris Software Suite** (CPU Emulator, Hardware Simulator)
-- **Hardware Description Language (HDL)** (For logic gate and chip design)
+- **Hardware Description Language (HDL)** (For chip design)
+- **Java** (For building the assembler and VM translator)
 
 ---
 
 ## 📢 Notes
 This repository is a work in progress as I continue learning. Stay tuned for more updates! 😊🚀
-
