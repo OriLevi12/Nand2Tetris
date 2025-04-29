@@ -3,7 +3,7 @@
 This repository contains my **Nand2Tetris** projects, where I learn how to build a computer from the ground up using the **Hack Assembly language**, **Virtual Machine translation**, and **digital logic**.
 
 ## 📌 Current Progress
-I have completed the first **7 projects** of the course:
+I have completed **8 projects** of the course:
 
 - **Project 1-3:** Designed basic logic gates, built the ALU, and implemented RAM using HDL.
 - **Project 4:** Wrote Hack Assembly programs (`Mult.asm`, `Fill.asm`).
@@ -12,7 +12,7 @@ I have completed the first **7 projects** of the course:
 - **Project 7:** Implemented a **Virtual Machine (VM) Translator** in Java that converts high-level VM commands (e.g., `push`, `pop`, `add`, `eq`) into Hack assembly. This stage covers:
   - Translating stack arithmetic operations (`add`, `sub`, `eq`, `gt`, `lt`, `neg`, `not`, `and`, `or`)
   - Memory access commands: `push` and `pop` for segments like `constant`, `local`, `argument`, `this`, `that`, `temp`, `pointer`, and `static`
-  - Bootstrapping with initial `SP=256` and support for test scripts like `BasicTest`, `StackTest`, and more.
+- **Project 8:** Extended the VM Translator to handle program control (`label`, `goto`, `if-goto`) and function calling (`function`, `call`, `return`) with full bootstrap logic and multi-file support.
 
 I plan to continue with the next stages of the VM (Project 8 and onward), which include program control, function calls, and building a simple operating system.
 
