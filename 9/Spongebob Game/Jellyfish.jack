@@ -1,0 +1,139 @@
+/** Represents a falling jellyfish block in the game */
+class Jellyfish {
+    field int x, y;          // Position on screen
+    field int size;          // Size of the jellyfish
+    field int speed;         // Falling speed
+   
+    
+    /** Constructs a new Jellyfish */
+    constructor Jellyfish new(int Ax, int Ay, int Asize, int Aspeed) {
+        let x = Ax;
+        let y = Ay;
+        let size = Asize;
+        let speed = Aspeed;
+        return this;
+    }
+
+    /** Disposes of this jellyfish */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draws the jellyfish using poke */
+    method void draw() {
+        var int location, memAddress;
+
+        if ((y > -1) & (y < 240)) {
+            let location = (y * 32) + (x / 16);
+            let memAddress = 16384 + location;
+
+            do Memory.poke(memAddress + 0, 0);
+            do Memory.poke(memAddress + 32, 2016);
+            do Memory.poke(memAddress + 64, 4080);
+            do Memory.poke(memAddress + 96, 8184);
+            do Memory.poke(memAddress + 128, 8184);
+            do Memory.poke(memAddress + 160, 7608);
+            do Memory.poke(memAddress + 192, 8184);
+            do Memory.poke(memAddress + 224, 4080);
+            do Memory.poke(memAddress + 256, 5408);
+            do Memory.poke(memAddress + 288, 5456);
+            do Memory.poke(memAddress + 320, 1352);
+            do Memory.poke(memAddress + 352, 1312);
+            do Memory.poke(memAddress + 384, 2336);
+            do Memory.poke(memAddress + 416, 128);
+            do Memory.poke(memAddress + 448, 0);
+            do Memory.poke(memAddress + 480, 0);
+        }
+
+        return;
+    }
+
+
+    /** Erases the jellyfish from its current position */
+    method void erase() {
+        var int location, memAddress, i;
+
+        if ((y > -1) & (y < 240)) {
+            let location = (y * 32) + (x / 16);
+            let memAddress = 16384 + location;
+            let i = 0;
+            while (i < 16) {
+                do Memory.poke(memAddress + (i * 32), 0);
+                let i = i + 1;
+            }
+        }
+
+        return;
+    }
+    
+    /** Updates the jellyfish position */
+    method void move() {
+            if (y < 240) {
+                do erase();
+                let y = y + speed;
+                do draw();
+            }
+            else {
+                do erase();
+}
+        
+        return;
+    }
+
+    /** Returns the left edge position */
+    method int getLeft() {
+        return x;
+    }
+
+    /** Returns the right edge position */
+    method int getRight() {
+        return x + size;
+    }
+
+    /** Returns the current height */
+    method int getHeight() {
+        return y;
+    }
+
+    /** Returns the bottom edge position */
+    method int getBottom() {
+        return y + size;
+    }
+
+    /** Returns the size */
+    method int getSize() {
+        return size;
+    }
+
+    /** Returns the current speed */
+    method int getSpeed() {
+        return speed;
+    }
+
+    /** Sets the speed */
+    method void setSpeed(int newSpeed) {
+        let speed = newSpeed;
+        return;
+    }
+
+    /** Checks if jellyfish has reached the bottom of the screen */
+    method boolean hasReachedBottom() {
+        return getBottom() > 220;
+    }
+
+    /** Checks if the jellyfish is in the middle of the screen */
+    method boolean isJellyfishInMiddle() {
+        return (getHeight() > 100) & (getBottom() < 156);
+    }
+
+    /** Returns true if this jellyfish intersects with the given player */
+    method boolean intersects(SpongeBob player) {
+        return ((getBottom() > player.getHeight()) &
+                (getLeft() < player.getRight()) &
+                (getRight() > player.getLeft()));
+    }
+
+
+ 
+} 

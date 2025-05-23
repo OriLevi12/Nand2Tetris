@@ -1,0 +1,134 @@
+/** Represents the mother jellyfish in the game */
+class MotherJellyfish {
+    field int x, y;          // Position on screen
+    field int size;          // Size of the mother jellyfish
+    field int speed;         // Falling speed
+    field boolean isActive;  // Whether the mother jellyfish is currently in play
+    
+    /** Constructs a new MotherJellyfish */
+    constructor MotherJellyfish new(int Ax, int Ay, int Asize, int Aspeed) {
+        let x = Ax;
+        let y = Ay;
+        let size = Asize;
+        let speed = Aspeed;
+        let isActive = true;
+        return this;
+    }
+
+    /** Disposes of this instance */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draws the jellyfish using rectangles */
+    method void draw() {
+        // Head
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 31, y + 15); // 32x16 head
+
+        // Tentacles
+        do Screen.drawRectangle(x + 4, y + 16, x + 6, y + 25);
+        do Screen.drawRectangle(x + 12, y + 16, x + 14, y + 25);
+        do Screen.drawRectangle(x + 20, y + 16, x + 22, y + 25);
+        do Screen.drawRectangle(x + 28, y + 16, x + 30, y + 25);
+
+        // Eyes
+        do Screen.setColor(false); // white for contrast
+        do Screen.drawRectangle(x + 8, y + 4, x + 10, y + 6);
+        do Screen.drawRectangle(x + 20, y + 4, x + 22, y + 6);
+
+        return;
+    }
+
+    /** Erases the jellyfish from its current position */
+    method void erase() {
+        do Screen.setColor(false);
+        // Erase the entire area including head and tentacles
+        do Screen.drawRectangle(x, y, x + 31, y + 25);
+        return;
+    }
+
+    /** Updates the mother jellyfish position */
+    method void move() {
+        if (isActive) {
+            if (y < 240) {
+                do erase();
+                let y = y + speed;
+                do draw();
+            }
+            else {
+                do erase();
+            }
+        }
+        return;
+    }
+
+    /** Returns the left edge position */
+    method int getLeft() {
+        return x;
+    }
+
+    /** Returns the right edge position */
+    method int getRight() {
+        return x + size;
+    }
+
+    /** Returns the current height */
+    method int getHeight() {
+        return y;
+    }
+
+    /** Returns the bottom edge position */
+    method int getBottom() {
+        return y + size;
+    }
+
+    /** Returns the size */
+    method int getSize() {
+        return size;
+    }
+
+    /** Returns the current speed */
+    method int getSpeed() {
+        return speed;
+    }
+
+    /** Sets the speed */
+    method void setSpeed(int newSpeed) {
+        let speed = newSpeed;
+        return;
+    }
+
+    /** Checks if mother jellyfish has reached the bottom of the screen */
+    method boolean hasReachedBottom() {
+        return getBottom() > 236;
+    }
+
+    /** Sets whether the mother jellyfish is active */
+    method void setActive(boolean active) {
+        if (active) {
+            do erase();  // Erase current position if any
+            let y = 0;   // Reset to top of screen
+            let x = Random.randRange(400); // Random x position
+            do draw();   // Draw at new position
+        }
+        else {
+            do erase();  // Erase when deactivating
+        }
+        let isActive = active;
+        return;
+    }
+
+    /** Returns whether the mother jellyfish is active */
+    method boolean isActive() {
+        return isActive;
+    }
+
+    /** Checks if this mother jellyfish intersects with the player */
+    method boolean intersects(SpongeBob player) {
+        return ((getBottom() > player.getHeight()) &
+                (getLeft() < player.getRight()) &
+                (getRight() > player.getLeft()));
+    }
+} 

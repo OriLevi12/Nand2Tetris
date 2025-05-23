@@ -1,0 +1,59 @@
+/* Random.jack
+ * Original random number generator by Mark Armbrust:
+ * http://nand2tetris-questions-and-answers-forum.32033.n3.nabble.com/Random-number-generator-for-hack-cpu-td4025503.html
+ *
+ * Adapted and extended by Ori Levi for the Nand2Tetris Game Project.
+ * Includes an additional method `waitForRandomSeed` for dynamic seed initialization
+ * based on user input timing.
+ */
+
+class Random {
+    static int seed;
+    
+    function void setSeed(int newSeed) {
+        let seed = newSeed;
+        return;
+    }
+
+    function int rand() {
+        /** return a random number in the range 0..32767 */
+        let seed = seed + 20251;
+        if (seed < 0) {
+            let seed = seed - 32767 - 1;
+        }
+        return seed;
+    }
+
+    function int randRange(int range) {
+        /** return a random number in the range 0..range */
+        var int mask;
+        var int ret;
+        let mask = 1;
+        while (mask < range) {
+            let mask = mask * 2 + 1;
+        }
+        let ret = Random.rand() & mask;
+        while (ret > range) {
+            let ret = Random.rand() & mask;
+        }
+        return ret;
+    }
+
+    /** Waits for a key press and uses the wait time as a random seed */
+    function void waitForRandomSeed() {
+        var int time;
+        let time = 0;
+
+        do Screen.clearScreen();
+        do Output.moveCursor(10, 27);
+        do Output.printString("Press any key to start");
+
+        while (Keyboard.keyPressed() = 0) {
+            let time = time + 10000;
+        }
+
+        do Screen.clearScreen();
+        do Random.setSeed(time);
+        return;
+    }
+}

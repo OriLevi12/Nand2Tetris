@@ -1,0 +1,284 @@
+function MotherJellyfish.new 0
+push constant 5
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 2
+push argument 3
+pop this 3
+push constant 0
+not
+pop this 4
+push pointer 0
+return
+function MotherJellyfish.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function MotherJellyfish.draw 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 31
+add
+push this 1
+push constant 15
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 4
+add
+push this 1
+push constant 16
+add
+push this 0
+push constant 6
+add
+push this 1
+push constant 25
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 12
+add
+push this 1
+push constant 16
+add
+push this 0
+push constant 14
+add
+push this 1
+push constant 25
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 20
+add
+push this 1
+push constant 16
+add
+push this 0
+push constant 22
+add
+push this 1
+push constant 25
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 28
+add
+push this 1
+push constant 16
+add
+push this 0
+push constant 30
+add
+push this 1
+push constant 25
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 8
+add
+push this 1
+push constant 4
+add
+push this 0
+push constant 10
+add
+push this 1
+push constant 6
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 20
+add
+push this 1
+push constant 4
+add
+push this 0
+push constant 22
+add
+push this 1
+push constant 6
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function MotherJellyfish.erase 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 31
+add
+push this 1
+push constant 25
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function MotherJellyfish.move 0
+push argument 0
+pop pointer 0
+push this 4
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 1
+push constant 240
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+call MotherJellyfish.erase 1
+pop temp 0
+push this 1
+push this 3
+add
+pop this 1
+push pointer 0
+call MotherJellyfish.draw 1
+pop temp 0
+goto IF_END1
+label IF_FALSE1
+push pointer 0
+call MotherJellyfish.erase 1
+pop temp 0
+label IF_END1
+label IF_FALSE0
+push constant 0
+return
+function MotherJellyfish.getLeft 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function MotherJellyfish.getRight 0
+push argument 0
+pop pointer 0
+push this 0
+push this 2
+add
+return
+function MotherJellyfish.getHeight 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function MotherJellyfish.getBottom 0
+push argument 0
+pop pointer 0
+push this 1
+push this 2
+add
+return
+function MotherJellyfish.getSize 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function MotherJellyfish.getSpeed 0
+push argument 0
+pop pointer 0
+push this 3
+return
+function MotherJellyfish.setSpeed 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 3
+push constant 0
+return
+function MotherJellyfish.hasReachedBottom 0
+push argument 0
+pop pointer 0
+push pointer 0
+call MotherJellyfish.getBottom 1
+push constant 236
+gt
+return
+function MotherJellyfish.setActive 0
+push argument 0
+pop pointer 0
+push argument 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call MotherJellyfish.erase 1
+pop temp 0
+push constant 0
+pop this 1
+push constant 400
+call Random.randRange 1
+pop this 0
+push pointer 0
+call MotherJellyfish.draw 1
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push pointer 0
+call MotherJellyfish.erase 1
+pop temp 0
+label IF_END0
+push argument 1
+pop this 4
+push constant 0
+return
+function MotherJellyfish.isActive 0
+push argument 0
+pop pointer 0
+push this 4
+return
+function MotherJellyfish.intersects 0
+push argument 0
+pop pointer 0
+push pointer 0
+call MotherJellyfish.getBottom 1
+push argument 1
+call SpongeBob.getHeight 1
+gt
+push pointer 0
+call MotherJellyfish.getLeft 1
+push argument 1
+call SpongeBob.getRight 1
+lt
+and
+push pointer 0
+call MotherJellyfish.getRight 1
+push argument 1
+call SpongeBob.getLeft 1
+gt
+and
+return

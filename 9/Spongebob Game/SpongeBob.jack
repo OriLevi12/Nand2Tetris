@@ -1,0 +1,133 @@
+/** Represents the SpongeBob character controlled by the player */
+class SpongeBob {
+    field int x, y;          // Position on screen
+    field int size;          // Size of SpongeBob
+    field int moveSpeed;     // Movement speed
+    field int direction;     // direction of SpongeBob movement
+    
+    /** Constructs a new SpongeBob character */
+    constructor SpongeBob new(int Ax, int Ay, int Asize, int AmoveSpeed) {
+        let x = Ax;
+        let y = Ay;
+        let size = Asize;
+        let moveSpeed = AmoveSpeed;
+        let direction = 0;   // No initial direction
+        do draw();          // Draw initial position
+        return this;
+    }
+
+    /** Disposes of this instance */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+     /** Draws SpongeBob using poke */
+    method void draw() {
+        var int location, memAddress;
+
+        // Make sure drawing is within screen bounds
+        if ((y > -1) & (y < 240)) {
+            let location = (y * 32) + (x / 16);
+            let memAddress = 16384 + location;
+            
+            do Memory.poke(memAddress + 0, 4088);
+            do Memory.poke(memAddress + 32, 2184);
+            do Memory.poke(memAddress + 64, 2728);
+            do Memory.poke(memAddress + 96, 2184);
+            do Memory.poke(memAddress + 128, 4088);
+            do Memory.poke(memAddress + 160, 4088);
+            do Memory.poke(memAddress + 192, 3544);
+            do Memory.poke(memAddress + 224, 3640);
+            do Memory.poke(memAddress + 256, 8188);
+            do Memory.poke(memAddress + 288, 8188);
+            do Memory.poke(memAddress + 320, 8060);
+            do Memory.poke(memAddress + 352, 864);
+            do Memory.poke(memAddress + 384, 864);
+            do Memory.poke(memAddress + 416, 864);
+            do Memory.poke(memAddress + 448, 1904);
+            do Memory.poke(memAddress + 480, 0);
+        }
+
+        return;
+    }
+
+    method void erase() {
+        var int location, memAddress, i;
+
+        if ((y > -1) & (y < 240)) {
+            let location = (y * 32) + (x / 16);
+            let memAddress = 16384 + location;
+            let i = 0;
+            while (i < 16) {
+                do Memory.poke(memAddress + (i * 32), 0);
+                let i = i + 1;
+            }
+        }
+
+        return;
+    }
+
+     /** Sets SpongeBob direction (1=left, 2=right). */
+    method void setDirection(int Adirection) {
+        let direction = Adirection;
+        return;
+    }
+
+     /** Moves SpongeBob one step  */
+    method void move() {
+        if (direction = 1) {
+            if (x > (moveSpeed + 4)) {  // Account for arms
+                do erase();
+                let x = x - moveSpeed;
+                do draw();
+            }
+        }
+        else {
+            if(direction = 2){
+                if ((x + size + moveSpeed + 4) < 510) {  // Account for arms
+                do erase();
+                let x = x + moveSpeed;
+                do draw();
+            }
+            }
+        }
+        return;
+    }
+
+       /** Returns SpongeBob left edge. */
+    method int getLeft() {
+        return x;
+    }
+
+    /** Returns SpongeBob right edge. */
+    method int getRight() {
+        return x + size;
+    }
+
+    /** Returns the current height */
+    method int getHeight() {
+        return y;
+    }
+
+    /** Returns the bottom edge position */
+    method int getBottom() {
+        return y + size;
+    }
+
+    /** Returns the size */
+    method int getSize() {
+        return size;
+    }
+
+    /** Returns the current speed */
+    method int getSpeed() {
+        return moveSpeed;
+    }
+
+    /** Sets the speed */
+    method void setSpeed(int newSpeed) {
+        let moveSpeed = newSpeed;
+        return;
+    }
+} 

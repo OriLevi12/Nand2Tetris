@@ -1,0 +1,19 @@
+/** Initializes and starts the game */
+class Main {
+    /** Initializes a new game and starts it */
+    function void main() {
+        var Game game;
+        
+        // Clear the screen before starting
+        do Screen.clearScreen();
+        
+        // Create and start the game
+        let game = Game.new();
+        do game.run();
+        
+        // Clean up when game is done
+        do game.dispose();
+        
+        return;
+    }
+} 
