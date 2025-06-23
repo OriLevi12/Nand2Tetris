@@ -43,3 +43,8 @@ To run `.jack` programs (like the game), use the **VM Emulator**:
 
 ## 📢 Notes
 This repository is a work in progress as I continue learning. Stay tuned for more updates! 😊🚀
+
+## 📬 Contact Info
+**Ori Levi**  
+📧 Email: Leviori1218@gmail.com  
+🐙 GitHub: [OriLevi12](https://github.com/OriLevi12) 
