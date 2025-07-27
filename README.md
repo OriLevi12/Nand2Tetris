@@ -15,7 +15,6 @@ I have completed **9 projects** of the course:
 - **Project 8:** Extended the VM Translator to handle program control (`label`, `goto`, `if-goto`) and function calling (`function`, `call`, `return`) with full bootstrap logic and multi-file support.
 - **Project 9:** Built an interactive game in Jack with keyboard input, scoring, and random enemy spawning.
 
-I plan to continue with the next stages of the VM (Project 8 and onward), which include program control, function calls, and building a simple operating system.
 
 ## ⚡ Running the Projects
 To test the assembly programs (`.asm` files), you can use the **CPU Emulator** provided in the Nand2Tetris software suite:
@@ -40,9 +39,6 @@ To run `.jack` programs (like the game), use the **VM Emulator**:
 - **Java** (For building the assembler and VM translator)
 
 ---
-
-## 📢 Notes
-This repository is a work in progress as I continue learning. Stay tuned for more updates! 😊🚀
 
 ## 📬 Contact Info
 **Ori Levi**  
